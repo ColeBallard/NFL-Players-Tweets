@@ -47,3 +47,9 @@ def extractPlayerId(s):
     player_id = last_part.replace('.htm', '')
 
     return player_id
+
+def isValidTwitterHandle(url):
+    # Regular expression to check for something after .com/
+    pattern = r'^https://twitter\.com/[^/]+$'
+    
+    return bool(re.match(pattern, url))

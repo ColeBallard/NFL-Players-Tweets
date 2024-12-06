@@ -3,10 +3,11 @@ import csv
 import yaml
 
 class PlayerScraper:
-    def __init__(self, scraper_type='', config_file="config.yaml", data_folder="data", refreshFunc=None):
+    def __init__(self, scraper_type='', config_file="config.yaml", data_folder="dataset", refreshFunc=None):
         self.SCRAPER_TYPES = {
             'PLAYER_HANDLE': 'player_handle',
-            'PLAYER_STAT': 'player_stat'
+            'PLAYER_STAT': 'player_stat',
+            'PLAYER_TWEET': 'player_tweet'
         }
 
         self.scraper_type = self.SCRAPER_TYPES.get(scraper_type, scraper_type)
