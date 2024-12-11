@@ -5,11 +5,9 @@ from player_scraper import PlayerScraper
 import utilities as u
 
 class PlayerHandleScraper(PlayerScraper):
-    def __init__(self, config_file="config.yaml", data_folder="data"):
+    def __init__(self):
         super().__init__(
-            scraper_type='PLAYER_HANDLE', 
-            config_file=config_file, 
-            data_folder=data_folder, 
+            scraper_type='PLAYER_HANDLE',
             refreshFunc=self.getNflPlayersAndHandles
         )
 

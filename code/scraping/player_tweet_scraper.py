@@ -18,7 +18,7 @@ import utilities as u
 
 
 class PlayerTweetScraper(PlayerScraper):
-    def __init__(self, config_file="config.yaml", data_folder="data"):
+    def __init__(self):
         # Get the absolute path to the .env file in the root directory
         root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         env_path = os.path.join(root_dir, ".env")
@@ -27,9 +27,7 @@ class PlayerTweetScraper(PlayerScraper):
         load_dotenv(env_path)
 
         super().__init__(
-            scraper_type='PLAYER_TWEET', 
-            config_file=config_file, 
-            data_folder=data_folder, 
+            scraper_type='PLAYER_TWEET',
             refreshFunc=self.getNflPlayerTweets
         )
 
@@ -78,17 +76,31 @@ class PlayerTweetScraper(PlayerScraper):
             # Now you can loop through `twitter_profiles` and use it as the list of webpages
             for twitter_url in twitter_profiles:
                 if u.isValidTwitterHandle(twitter_url):
-                    sleep(random.uniform(2, 6))
+                    retry_counter = 0
 
-                    driver.get(twitter_url)
+                    while True:
+                        try:
+                            sleep(random.uniform(2, 6))
 
-                    player_tweets = self._getTweets(driver=driver, twitter_url=twitter_url)
+                            driver.get(twitter_url)
 
-                    # Check if `player_tweets` is not empty
-                    if player_tweets:
-                        for tweet in player_tweets:
-                            data['data'].append(tweet)  # Append each tweet dictionary individually
+                            player_tweets = self._getTweets(driver=driver, twitter_url=twitter_url)
 
+                            # Check if `player_tweets` is not empty
+                            if player_tweets:
+                                for tweet in player_tweets:
+                                    data['data'].append(tweet)  # Append each tweet dictionary individually
+                            
+                            break
+                        except Exception as e:
+                            retry_counter += 1
+                            if retry_counter <= 3:
+                                sleep_time = 720 + random.uniform(1, 300)
+                                print(f'Error while getting tweets from {twitter_url}: {e}. Retrying ({retry_counter}/3) in {sleep_time} seconds.')
+                                sleep(sleep_time)
+                            else:
+                                print(f'Error while getting tweets from {twitter_url}: {e}. Max retried reached. Skipping...')
+                                break
         except Exception as e:
             print(f"An error occurred: {e}")
         
@@ -159,8 +171,7 @@ class PlayerTweetScraper(PlayerScraper):
             )
             print("Tweets are now present on the page.")
         except Exception as e:
-            print(f"Error locating tweets: {e}")
-            return tweets_data  # Return empty list if tweets cannot be found
+            raise Exception(e)
 
         while True:
             tweets = driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
