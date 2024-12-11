@@ -2,6 +2,10 @@
 
 ## Project Description
 
+### Results
+
+[PDF of findings](https://github.com/ColeBallard/NFL-Players-Tweets/blob/main/assets/final.ipynb.pdf)
+
 ### Background
 
 The integration of online data, such as NFL players' tweets and game statistics, provides a potentially useful approach to predicting performance and understanding game outcomes. By analyzing tweet sentiment, behavioral patterns, and public reactions, people can uncover correlations between players' mental states and on-field results, which can include factors influencing performance, such as focus, confidence, or distractions. Machine learning models enhance this analysis by identifying patterns and generating predictions based on both statistical and textual data with sentiment text-analysis.
